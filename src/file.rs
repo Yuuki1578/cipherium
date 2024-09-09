@@ -1,9 +1,10 @@
+use crate::EXIT_FAILURE;
 use std::fs::File;
 use std::io::{Error, ErrorKind};
 use std::process;
 
 pub fn get_file<'a>(f: &'a str) -> File {
-    let mut file: Result<File, Error>;
+    let file: Result<_, _>;
 
     match &f[f.len() - 5..] {
         ".ciph" => file = File::open(f),
@@ -12,7 +13,7 @@ pub fn get_file<'a>(f: &'a str) -> File {
                 "{}",
                 Error::new(ErrorKind::Other, "invalid filetypes, expected *.ciph")
             );
-            process::exit(1);
+            process::exit(EXIT_FAILURE);
         }
     }
 
@@ -20,7 +21,7 @@ pub fn get_file<'a>(f: &'a str) -> File {
         Ok(found) => found,
         Err(error) => {
             eprintln!("{}", error);
-            process::exit(2);
+            process::exit(EXIT_FAILURE);
         }
     }
 }

@@ -1,4 +1,5 @@
 use crate::{process, EXIT_FAILURE};
+use std::num::Wrapping;
 
 pub trait Ranged {
     fn in_range(&self, start: u8, end: u8) -> bool;
@@ -23,11 +24,29 @@ pub enum CharsKind {
 }
 
 impl CharsKind {
-    pub const fn formula_encode(&self, byte: u8, key: u8) -> u8 {
+    pub fn formula_encode(&self, byte: u8, key: u8) -> u8 {
         match self {
-            CharsKind::LowerCase => (byte - b'a' + key) % 26 + b'a',
-            CharsKind::UpperCase => (byte - b'A' + key) % 26 + b'A',
-            CharsKind::Numeric => (byte - b'0' + key) % 10 + b'0',
+            CharsKind::LowerCase => {
+                let wrap_byte = Wrapping(byte);
+                let wrap_init = Wrapping(b'a');
+
+                ((wrap_byte - wrap_init).0 + key) % 26 + b'a'
+            }
+
+            CharsKind::UpperCase => {
+                let wrap_byte = Wrapping(byte);
+                let wrap_init = Wrapping(b'A');
+
+                ((wrap_byte - wrap_init).0 + key) % 26 + b'A'
+            }
+
+            CharsKind::Numeric => {
+                let wrap_byte = Wrapping(byte);
+                let wrap_init = Wrapping(b'0');
+
+                ((wrap_byte - wrap_init).0 + key) % 10 + b'0'
+            }
+
             CharsKind::Undefined => byte,
         }
     }
@@ -100,5 +119,42 @@ pub fn decode<'a>(stream: &'a str, key: u8) -> String {
             eprintln!("{}", error);
             process::exit(EXIT_FAILURE);
         }
+    }
+}
+
+pub mod tests {
+    #[test]
+    pub fn test_encode_low_extra() {
+        println!(
+            "{}",
+            super::encode("awang, \nabcdefghijklmnopqrstuvwxyz\t", 17)
+        );
+    }
+
+    #[test]
+    pub fn test_encode_up_and_low() {
+        println!(
+            "{}",
+            super::encode(
+                "Awang Destu Pradhana CoYY Zstdlib Zstd Zsh Xsever Xeon XSDL Android ELF HeadeR",
+                13
+            )
+        );
+    }
+
+    #[test]
+    pub fn test_encode_up() {
+        println!(
+            "{}",
+            super::encode(
+                "PROGRAM MAIN\n\tPRINT *, \"HELLO WORLD!\"\nEND PROGRAM MAIN",
+                30
+            )
+        );
+    }
+
+    #[test]
+    pub fn test_encode_symbols() {
+        println!("{}", super::encode("\t\n\r={}{%]^¥®A\n\n\t\r}", 14));
     }
 }

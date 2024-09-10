@@ -10,11 +10,14 @@ pub const EXIT_SUCCESS: i32 = 0;
 pub const EXIT_FAILURE: i32 = 1;
 
 use std::io;
+use std::num::Wrapping;
 pub use std::process;
-use utils::CharsKind;
 
 fn main() -> io::Result<()> {
-    println!("{}", utils::encode("Awang", 2));
+    let x = Wrapping(0 as u8);
+    let y = Wrapping(1 as u8);
+
+    println!("{}", (x - y).0);
 
     Ok(())
 }

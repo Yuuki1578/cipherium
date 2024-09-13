@@ -10,14 +10,17 @@ pub const EXIT_SUCCESS: i32 = 0;
 pub const EXIT_FAILURE: i32 = 1;
 
 use std::io;
-use std::num::Wrapping;
 pub use std::process;
 
 fn main() -> io::Result<()> {
-    let x = Wrapping(0 as u8);
-    let y = Wrapping(1 as u8);
+    let msg = String::from("awang");
+    let template: String;
 
-    println!("{}", (x - y).0);
+    println!("{}", {
+        template = utils::encode(&msg[..], 18);
+        template.clone()
+    });
+    println!("{}", utils::decode(&template[..], 18));
 
     Ok(())
 }

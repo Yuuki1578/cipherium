@@ -1,6 +1,12 @@
 use crate::{process, EXIT_FAILURE};
 use std::num::Wrapping;
 
+pub type Wrap = Wrapping<u8>;
+
+pub fn wrap(data: u8) -> Wrap {
+    Wrapping(data)
+}
+
 pub trait Ranged {
     fn in_range(&self, start: u8, end: u8) -> bool;
 }
@@ -27,24 +33,30 @@ impl CharsKind {
     pub fn formula_encode(&self, byte: u8, key: u8) -> u8 {
         match self {
             CharsKind::LowerCase => {
-                let wrap_byte = Wrapping(byte);
-                let wrap_init = Wrapping(b'a');
+                let wrap_byte = wrap(byte);
+                let wrap_init = wrap(b'a');
+                let wrap_key = wrap(key);
+                let wrap_modulo = wrap(26);
 
-                ((wrap_byte - wrap_init).0 + key) % 26 + b'a'
+                { (Wrapping((wrap_byte - wrap_init).0) + wrap_key) % wrap_modulo + wrap_init }.0
             }
 
             CharsKind::UpperCase => {
-                let wrap_byte = Wrapping(byte);
-                let wrap_init = Wrapping(b'A');
+                let wrap_byte = wrap(byte);
+                let wrap_init = wrap(b'A');
+                let wrap_key = wrap(key);
+                let wrap_modulo = wrap(26);
 
-                ((wrap_byte - wrap_init).0 + key) % 26 + b'A'
+                { (Wrapping((wrap_byte - wrap_init).0) + wrap_key) % wrap_modulo + wrap_init }.0
             }
 
             CharsKind::Numeric => {
-                let wrap_byte = Wrapping(byte);
-                let wrap_init = Wrapping(b'0');
+                let wrap_byte = wrap(byte);
+                let wrap_init = wrap(b'0');
+                let wrap_key = wrap(key);
+                let wrap_modulo = wrap(10);
 
-                ((wrap_byte - wrap_init).0 + key) % 10 + b'0'
+                { (Wrapping((wrap_byte - wrap_init).0) + wrap_key) % wrap_modulo + wrap_init }.0
             }
 
             CharsKind::Undefined => byte,

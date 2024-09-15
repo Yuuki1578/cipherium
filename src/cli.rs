@@ -1,7 +1,5 @@
 use std::env;
 
-pub const VERSION: &str = "0.1.0";
-
 #[derive(Debug, Clone)]
 pub struct Args {
     list: Vec<String>,
@@ -34,16 +32,40 @@ impl Args {
         self.list.len()
     }
 
-    pub fn compare<'a, F>(&self, index: usize, with: &'a str, f: F)
+    pub fn compare<'a, F>(&self, index: usize, with: &'a str, or: &'a str, f: F)
     where
         F: FnOnce(),
     {
         if let Some(args) = self.list.get(index) {
-            if &args[..] == with {
+            if args == with || args == or {
                 f();
             }
 
             return ();
         }
     }
+}
+
+pub fn help() -> &'static str {
+    r#"
+cipherium: encrypt or decrypt file with caesar cipher
+basic usage:
+
+    --help | -h        print this help message
+
+    --version | -v     print the current major version
+
+    --encode | -e      encode file with the following patterns:
+        cprm --encode <FILE> <KEY> where KEY is number of shift right
+
+    --decode | -d      decode file with the following patterns:
+        cprm --decode <FILE> <KEY> where KEY is number of shift left
+
+have a trouble or found a bug? create an issue at my repo
+https://github.com/Yuuki1578/cipherium
+"#
+}
+
+pub fn version<'l>(static_ver: &'l str) -> String {
+    format!("cipherium version {}", static_ver)
 }

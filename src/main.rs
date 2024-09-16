@@ -19,6 +19,11 @@ use std::process;
 fn main() {
     let args = Args::parse(3);
 
+    if args.len() == 0 {
+        println!("{}", cli::help());
+        process::exit(EXIT_FAILURE);
+    }
+
     args.compare(0, "--help", "-h", || {
         println!("{}", cli::help());
         process::exit(EXIT_SUCCESS);
@@ -71,13 +76,13 @@ fn main() {
 
     args.compare(0, "--decode", "-d", || {
         let (arg1, arg2) = (args.get(1), args.get(2));
-        let (mut file, key): (File, u32);
+        let (mut file, key): (File, u8);
         let mut buffer = String::new();
 
         match (arg1, arg2) {
             (Some(found_f), Some(found_k)) => {
                 file = file::get_file(found_f);
-                key = match found_k.parse::<u32>() {
+                key = match found_k.parse::<u8>() {
                     Ok(val) => val,
                     Err(error) => {
                         eprintln!("{}", error);

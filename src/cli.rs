@@ -32,7 +32,7 @@ impl Args {
         self.list.len()
     }
 
-    pub fn compare<'a, F>(&self, index: usize, with: &'a str, or: &'a str, f: F)
+    pub fn compare<F>(&self, index: usize, with: &str, or: &str, f: F)
     where
         F: FnOnce(),
     {
@@ -48,7 +48,7 @@ impl Args {
 
 pub fn help() -> &'static str {
     r#"
-cipherium: encrypt or decrypt file with caesar cipher
+Cipherium: encrypt or decrypt file with caesar cipher
 basic usage:
 
     --help | -h        print this help message
@@ -56,16 +56,20 @@ basic usage:
     --version | -v     print the current major version
 
     --encode | -e      encode file with the following patterns:
-        cprm --encode <FILE> <KEY> where KEY is number of shift right
+        cipherium --encode <FILE> <KEY> where KEY is number of shift right
 
     --decode | -d      decode file with the following patterns:
-        cprm --decode <FILE> <KEY> where KEY is number of shift left
+        cipherium --decode <FILE> <KEY> where KEY is number of shift left
 
-have a trouble or found a bug? create an issue at my repo
+All key must be valid within u8 boundaries
+starting from 0 to 255. If not, integer overflow
+will occurs, and this program will handle it for you
+
+Have a trouble or found a bug? create an issue at my repo
 https://github.com/Yuuki1578/cipherium
 "#
 }
 
-pub fn version<'l>(static_ver: &'l str) -> String {
+pub fn version(static_ver: &str) -> String {
     format!("cipherium version {}", static_ver)
 }

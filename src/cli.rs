@@ -1,11 +1,33 @@
 use std::env;
 
+/// Argument handler using `Vec<String>`
+/// ## Example:
+/// ```rust
+/// // The input is "program foo bar baz"
+/// let args = Args::parse(3);
+///
+/// //comparing
+/// assert_eq!(&vec[
+///     "foo".to_string(),
+///     "bar".to_string(),
+///     "baz".to_string()], &args.list),
+/// ```
 #[derive(Debug, Clone)]
 pub struct Args {
-    list: Vec<String>,
+    /// A vector of arguments
+    /// represented as `Vec<String>`
+    pub list: Vec<String>,
 }
 
 impl Args {
+    /// Get _n_ arguments and store it as a `Vec<String>`.
+    /// The _n_ is a limiter for when to stop to getting the arguments.
+    /// This function also excluding the first arguments, which usually the program name.
+    /// ## Example:
+    /// ```rust
+    /// let args = Args::parse(1); // input will be "foo"
+    /// assert_eq!(&args.list, &vec!["foo".to_string()]);
+    /// ```
     pub fn parse(limit: usize) -> Self {
         let mut as_used: Vec<String> = Vec::new();
 
@@ -24,6 +46,10 @@ impl Args {
         Self { list: as_used }
     }
 
+    /// A wrapper arround
+    /// ```rust
+    /// Vec<T>::get(&Self) -> Option<&T>
+    /// ```
     pub fn get(&self, index: usize) -> Option<&String> {
         self.list.get(index)
     }

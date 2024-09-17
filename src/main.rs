@@ -2,13 +2,23 @@ pub mod cli;
 pub mod file;
 pub mod utils;
 
+/// # Major version of the program
+/// used in src/main.rs 34:37
 pub const VERSION: &'static str = "0.1.0";
 
+/// # C argv[0] representation
 pub const ARGV_0: usize = 0;
+
+/// # C argv[1] representation
 pub const ARGV_1: usize = 1;
+
+/// # C argv[2] representation
 pub const ARGV_2: usize = 2;
 
+/// # C stdlib/EXIT_SUCCCESS macro representation
 pub const EXIT_SUCCESS: i32 = 0;
+
+/// # C stdlib/EXIT_FAILURE macro representation
 pub const EXIT_FAILURE: i32 = 1;
 
 use cli::Args;
